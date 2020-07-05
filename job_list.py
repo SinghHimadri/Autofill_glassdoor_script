@@ -10,6 +10,7 @@ import time
 
 
 # dictionary of user's preferenes
+# make changes here
 CHOICES = {
     "job_title": "Software Engineer",
     "location": "Pune (India)"
@@ -30,7 +31,7 @@ def glassdoor_config(driver):
     return True
 
 
-# fill entries and search jobs 
+# fill entries and search jobs
 def search_job(driver):
 
     # wait until search bar to appears
@@ -39,19 +40,19 @@ def search_job(driver):
         )
 
     try:
-        # look for search bar fields
+        # locating company and location bar
         company_field = driver.find_element_by_xpath("//*[@id='sc.keyword']")
         location_field = driver.find_element_by_xpath("//*[@id='sc.location']")
         company_field.clear()
         location_field.clear()
 
-        # fill in with pre-defined data
+        # filling user's choice
         company_field.clear()
         company_field.send_keys(CHOICES['job_title'])
         location_field.clear()
         location_field.send_keys(CHOICES['location'])
 
-        # wait for a little so location gets set
+        # clicking search bar
         time.sleep(1)
         driver.find_element_by_xpath(" //*[@id='scBar']/div/button").click()
 
@@ -63,23 +64,22 @@ def search_job(driver):
 
         return True
 
-    # note: please ignore all crappy error handling haha
     except NoSuchElementException:
         return False
 
+
 def getURLs():
-    #driver = webdriver.Chrome(executable_path='home/timtim/Downloads/chromedriver_linux64/chromedriver')
+
     driver = webdriver.Chrome(ChromeDriverManager().install())
     success = glassdoor_config(driver)
     if not success:
-        # close the page if it gets stuck at some point - this logic can be improved
+        # improvement required
         driver.close()
 
     success = search_job(driver)
     if not success:
         driver.close()
 
-if __name__ == '__main__':
 
-    # call get_links to automatically scrape job listings from glassdoor
+if __name__ == '__main__':
     getURLs()
