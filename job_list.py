@@ -93,7 +93,6 @@ def get_links(driver):
     for link in allLinks:
         # first, replace GD_JOB_AD with GD_JOB_VIEW
         # this will replace the Glassdoor hosted job page to the proper job page
-        # hosted on most likely Greenhouse or Lever
         link = link.replace("GD_JOB_AD", "GD_JOB_VIEW")
 
         # if there is no glassdoor prefex, add that
@@ -108,18 +107,15 @@ def get_links(driver):
         request = urllib.request.Request(link, None, headers)  # The assembled request
 
         try:
-            # the url is on glassdoor itself, but once it's opened, it redirects - so let's store that
+            # the url is on glassdoor itself, but once it's opened, it redirects - so let's store that the job page
             response = urllib.request.urlopen(request)
             newLink = response.geturl()
-            print(newLink)
 
             # if the result url is from glassdoor, it's an 'easy apply' one and worth not saving
-            # however, this logic can be changed if you want to keep those
             if "glassdoor" not in newLink:
                 print(newLink)
                 print('\n')
                 allFixedLinks.append(newLink)
-                print(allFixedLinks)
         except Exception:
             print(f'ERROR: failed for {link}')
             print('\n')
@@ -139,7 +135,7 @@ def getURLs():
     success = search_job(driver)
     if not success:
         driver.close()
-    aggregate_links(driver)
+    
 
 if __name__ == '__main__':
     getURLs()
