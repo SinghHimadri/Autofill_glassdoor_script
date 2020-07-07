@@ -140,7 +140,7 @@ def getURLs():
     allLinks = set()
     page = 1
     next_url = ''
-    while page < 5: # User enter the number of pages so this doesn't run infinitely
+    while page < 5:  # User enter the number of pages so this doesn't run infinitely
 
         print(f'\nNEXT PAGE #: {page}\n')
 
@@ -160,16 +160,15 @@ def getURLs():
             # for page 2 onwards, there's a different page structure that we need to convert from
             # from: .../jobs-SRCH_IL.0,13_IC1147401_KE14,33.htm?p=2
             # to: .../jobs-SRCH_IL.0,13_IC1147401_KE14,33_IP2.htm
-            page += 1 # increment page count
-            next_url = f"{m.group('url')}_IP{page}.htm" # update url with new page number
+            page += 1  # increment page count
+            next_url = f"{m.group('url')}_IP{page}.htm"  # update url with new page number
             time.sleep(1)
 
         # same patterns from page 2 onwards
-        if page >=2 :
+        if page > = 2:
 
-            driver.get(next_url) # open page with new URL
-            
-            allLinks.update(get_links(driver)) # collect all the links
+            driver.get(next_url)  # open page with new URL
+            allLinks.update(get_links(driver))  # collect all the links
 
             # run regex to get all reusable parts of URL
             m = re.search('(?P<url>[^;]*?)(?P<pagenum>.)(?P<html>.htm)', next_url)
