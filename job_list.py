@@ -8,6 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 from bs4 import BeautifulSoup
 import urllib.request
+import re
 # region END
 
 
@@ -124,18 +125,56 @@ def get_links(driver):
     return set(allFixedLinks)
 
 
+# method to iterate through all pages and aggregate URLs
 def getURLs():
-
     driver = webdriver.Chrome(ChromeDriverManager().install())
     success = glassdoor_config(driver)
     if not success:
-        # improvement required
+        # close the page if it gets stuck at some point - this logic can be improved
         driver.close()
 
     success = search_job(driver)
     if not success:
         driver.close()
-    
 
-if __name__ == '__main__':
-    getURLs()
+    allLinks = set()
+    page = 1
+    next_url = ''
+    while page < 5: # User enter the number of pages so this doesn't run infinitely
+
+        print(f'\nNEXT PAGE #: {page}\n')
+
+        # on the first page, the URL is unique and doesn't have a field for the page number
+        if page == 1:
+
+            # aggregate links on first page
+            allLinks.update(get_links(driver))
+
+            # find next page button and click it
+            next_page = driver.find_element_by_xpath("//*[@id='FooterPageNav']/div/ul/li[3]/a")
+            this_page = next_page.get_attribute('href')
+
+            # use regex to parse out the page number
+            m = re.search('(?P<url>[^;]*?)(?P<page>.htm\?p=)(?P<pagenum>.)', this_page)
+
+            # for page 2 onwards, there's a different page structure that we need to convert from
+            # from: .../jobs-SRCH_IL.0,13_IC1147401_KE14,33.htm?p=2
+            # to: .../jobs-SRCH_IL.0,13_IC1147401_KE14,33_IP2.htm
+            page += 1 # increment page count
+            next_url = f"{m.group('url')}_IP{page}.htm" # update url with new page number
+            time.sleep(1)
+
+        # same patterns from page 2 onwards
+        if page >=2 :
+
+            driver.get(next_url) # open page with new URL
+            
+            allLinks.update(get_links(driver)) # collect all the links
+
+            # run regex to get all reusable parts of URL
+            m = re.search('(?P<url>[^;]*?)(?P<pagenum>.)(?P<html>.htm)', next_url)
+            page += 1
+            next_url = f"{m.group('url')}{page}.htm"
+
+    driver.close()
+    return allLinks
