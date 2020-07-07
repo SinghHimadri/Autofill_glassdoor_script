@@ -165,7 +165,7 @@ def getURLs():
             time.sleep(1)
 
         # same patterns from page 2 onwards
-        if page > = 2:
+        if page >= 2:
 
             driver.get(next_url)  # open page with new URL
             allLinks.update(get_links(driver))  # collect all the links
