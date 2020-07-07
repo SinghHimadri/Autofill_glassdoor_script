@@ -15,7 +15,7 @@ import urllib.request
 # make changes here
 CHOICES = {
     "job_title": "Software Engineer",
-    "location": "Pune (India)"
+    "location": "New Delhi (India)"
 }
 
 
@@ -70,22 +70,21 @@ def search_job(driver):
         return False
 
 
-# get all jobs url links set
-def aggregate_links(driver):
-    allLinks = [] 
+# get all url links in a set
+def get_links(driver):
 
+    allLinks = []  # all hrefs list that exist on the page
     # wait for page to fully load
     element = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.XPATH, "//*[@id='MainCol']/div[1]/ul"))
         )
-
     time.sleep(5)
 
-    # parse the page source using beautiful soup
+    # parsing the page source using beautiful soup
     page_source = driver.page_source
     soup = BeautifulSoup(page_source)
 
-    # find all hrefs
+    # find all hrefs with class tag job
     allJobLinks = soup.findAll("a", {"class": "jobLink"})
     allLinks = [jobLink['href'] for jobLink in allJobLinks]
     allFixedLinks = []
@@ -102,17 +101,17 @@ def aggregate_links(driver):
 
         if link[0] == '/':
             link = f"https://www.glassdoor.com{link}"
-
         # then, open up each url and save the result url
         # because we got a 403 error when opening this normally, we have to establish the user agent
         user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-        headers={'User-Agent':user_agent,}
-        request=urllib.request.Request(link,None,headers) #The assembled request
+        headers = {'User-Agent': user_agent, }
+        request = urllib.request.Request(link, None, headers)  # The assembled request
 
         try:
             # the url is on glassdoor itself, but once it's opened, it redirects - so let's store that
             response = urllib.request.urlopen(request)
             newLink = response.geturl()
+            print(newLink)
 
             # if the result url is from glassdoor, it's an 'easy apply' one and worth not saving
             # however, this logic can be changed if you want to keep those
@@ -120,8 +119,8 @@ def aggregate_links(driver):
                 print(newLink)
                 print('\n')
                 allFixedLinks.append(newLink)
+                print(allFixedLinks)
         except Exception:
-            # horrible way to catch errors but this doesnt happen regualrly (just 302 HTTP error)
             print(f'ERROR: failed for {link}')
             print('\n')
 
@@ -140,7 +139,7 @@ def getURLs():
     success = search_job(driver)
     if not success:
         driver.close()
-
+    aggregate_links(driver)
 
 if __name__ == '__main__':
     getURLs()
