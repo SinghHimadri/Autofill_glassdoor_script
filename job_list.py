@@ -16,7 +16,7 @@ import re
 # make changes here
 CHOICES = {
     "job_title": "Software Engineer",
-    "location": "New Delhi (India)"
+    "location": "Bangalore (India)"
 }
 
 
@@ -38,8 +38,8 @@ def glassdoor_config(driver):
 def search_job(driver):
 
     # wait until search bar to appears
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.XPATH, "//*[@id='scBar']"))
+    element = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, "//*[@id='scBar']"))
         )
 
     try:
@@ -177,3 +177,6 @@ def getURLs():
 
     driver.close()
     return allLinks
+
+if __name__ == '__main__':
+    getURLs()
