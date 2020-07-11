@@ -1,9 +1,9 @@
-#region IMPORTS
+# egion IMPORTS
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
-import os 
+import os
 import time
 import job_list
 # region END
@@ -26,6 +26,7 @@ INFORMATION = {
     "grad_year": '2021',
     "university": "IIIT"
 }
+
 
 # Lever Application form
 def lever(driver):
@@ -59,7 +60,7 @@ def lever(driver):
     try:
         driver.find_element_by_class_name('application-university').click()
         search = driver.find_element_by_xpath("//*[@type='search']")
-        search.send_keys(INFORMATION['university']) # find university in dropdown
+        search.send_keys(INFORMATION['university'])  # find university in dropdown
         search.send_keys(Keys.RETURN)
     except NoSuchElementException:
         pass
