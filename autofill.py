@@ -91,10 +91,10 @@ def greenhouse(driver):
     try:
         loc = driver.find_element_by_id('job_application_location')
         loc.send_keys(INFORMATION['location'])
-        loc.send_keys(Keys.DOWN) # manipulate a dropdown menu
+        loc.send_keys(Keys.DOWN)  # manipulate a dropdown menu
         loc.send_keys(Keys.DOWN)
         loc.send_keys(Keys.RETURN)
-        time.sleep(2) # give user time to manually input if this fails
+        time.sleep(2)  # give user time to manually input if this fails
 
     except NoSuchElementException:
         pass
@@ -104,7 +104,7 @@ def greenhouse(driver):
     resume_zone = driver.find_element_by_id('resume_text')
     resume_zone.click()
     with open(INFORMATION['resume_textfile']) as f:
-        lines = f.readlines() # add each line of resume to the text area
+        lines = f.readlines()  # add each line of resume to the text area
         for line in lines:
             resume_zone.send_keys(line.decode('utf-8'))
 
