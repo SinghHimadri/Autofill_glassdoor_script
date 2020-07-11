@@ -15,8 +15,8 @@ import re
 # dictionary of user's preferenes
 # make changes here
 CHOICES = {
-    "job_title": "Software Engineer",
-    "location": "Bangalore (India)"
+    "job_title": "Geophysicist",
+    "location": "Bengaluru (India)"
 }
 
 
@@ -177,6 +177,6 @@ def getURLs():
 
     driver.close()
     return allLinks
-
-if __name__ == '__main__':
-    getURLs()
+# run the below commands to get the list(and don't want to apply)
+# if __name__ == '__main__':
+#     getURLs()
