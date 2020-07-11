@@ -8,6 +8,7 @@ import time
 import job_list
 # region END
 
+
 # Fill your personal details
 INFORMATION = {
     "first_name": "Foo",
@@ -28,7 +29,7 @@ INFORMATION = {
 }
 
 
-# Lever Application form
+# Parsing Lever Application form
 def lever(driver):
 
     # Open the application web page
@@ -56,7 +57,7 @@ def lever(driver):
             pass
     driver.find_element_by_name('urls[Portfolio]').send_keys(INFORMATION['website'])
 
-    # university(if asked)
+    # University(if asked)
     try:
         driver.find_element_by_class_name('application-university').click()
         search = driver.find_element_by_xpath("//*[@type='search']")
@@ -77,6 +78,85 @@ def lever(driver):
     driver.find_element_by_class_name('template-btn-submit').click()
 
 
+# Parsing Greenhouse application form
+def greenhouse(driver):
+
+    # basic info
+    driver.find_element_by_id('first_name').send_keys(INFORMATION['first_name'])
+    driver.find_element_by_id('last_name').send_keys(INFORMATION['last_name'])
+    driver.find_element_by_id('email').send_keys(INFORMATION['email'])
+    driver.find_element_by_id('phone').send_keys(INFORMATION['phone'])
+
+    # If doesn't works user has to complete the action
+    try:
+        loc = driver.find_element_by_id('job_application_location')
+        loc.send_keys(INFORMATION['location'])
+        loc.send_keys(Keys.DOWN) # manipulate a dropdown menu
+        loc.send_keys(Keys.DOWN)
+        loc.send_keys(Keys.RETURN)
+        time.sleep(2) # give user time to manually input if this fails
+
+    except NoSuchElementException:
+        pass
+
+    # Upload Resume as a Text File in Resume paste option
+    driver.find_element_by_css_selector("[data-source='paste']").click()
+    resume_zone = driver.find_element_by_id('resume_text')
+    resume_zone.click()
+    with open(INFORMATION['resume_textfile']) as f:
+        lines = f.readlines() # add each line of resume to the text area
+        for line in lines:
+            resume_zone.send_keys(line.decode('utf-8'))
+
+    # linkedin
+    try:
+        driver.find_element_by_xpath("//label[contains(.,'LinkedIn')]").send_keys(INFORMATION['linkedin'])
+    except NoSuchElementException:
+        try:
+            driver.find_element_by_xpath("//label[contains(.,'Linkedin')]").send_keys(INFORMATION['linkedin'])
+        except NoSuchElementException:
+            pass
+# User to make changes here for drop down menu
+    # graduation year
+    try:
+        driver.find_element_by_xpath("//select/option[text()='2021']").click()
+    except NoSuchElementException:
+        pass
+
+    # university
+    try:
+        driver.find_element_by_xpath("//select/option[contains(.,'Harvard')]").click()
+    except NoSuchElementException:
+        pass
+
+    # degree
+    try:
+        driver.find_element_by_xpath("//select/option[contains(.,'Bachelor')]").click()
+    except NoSuchElementException:
+        pass
+
+    # major
+    try:
+        driver.find_element_by_xpath("//select/option[contains(.,'Computer Science')]").click()
+    except NoSuchElementException:
+        pass
+
+    # website
+    try:
+        driver.find_element_by_xpath("//label[contains(.,'Website')]").send_keys(INFORMATION['website'])
+    except NoSuchElementException:
+        pass
+
+    # work authorization
+    try:
+        driver.find_element_by_xpath("//select/option[contains(.,'any employer')]").click()
+    except NoSuchElementException:
+        pass
+
+    driver.find_element_by_id("submit_app").click()
+
+
+# main
 if __name__ == '__main__':
 
     # scrape job listings from glassdoor
