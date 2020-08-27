@@ -15,7 +15,7 @@ import re
 # dictionary of user's preferenes
 # make changes here
 CHOICES = {
-    "job_title": "Geophysicist",
+    "job_title": "Android Developer",
     "location": "Bengaluru (India)"
 }
 
