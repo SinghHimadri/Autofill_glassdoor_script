@@ -2,6 +2,7 @@
 
 
 A script to automatically search Glassdoor for job listings, aggregate every application URL, and apply to each job using pre-populated data. ***All with one click!***
+The resume used in the repository is for demo and has been downloaded from internet for educational purpose.
 
 
 ![app demo](demo.gif)
@@ -37,4 +38,4 @@ Ever sit at your desk for hours, clicking through endless job listings hoping to
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md]() file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/SinghHimadri/Autofill_glassdoor_script/blob/master/LICENSE.md) file for details.
